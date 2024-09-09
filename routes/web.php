@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 /*
@@ -13,6 +14,7 @@ use App\Http\Controllers\TaskController;
 |
 */
 
+Route::get('/users', [UserController::class,'index']);
 Route::get('/task', [TaskController::class,'index']);
 Route::post('/tasks', [TaskController::class, 'store']);
 Route::put('/tasks/{id}', [TaskController::class, 'update']);

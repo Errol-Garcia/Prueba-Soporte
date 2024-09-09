@@ -22,7 +22,13 @@
                 <input v-model="newTask.description" class="form-control" placeholder="Task Description" required>
             </div>
             <div class="form-group">
-                <input v-model="newTask.user" class="form-control" placeholder="Assigned User (email)" required>
+                <!-- <input v-model="newTask.user" class="form-control" placeholder="Assigned User (email)" required> -->
+                <select v-model="newTask.user" class="form-control"  required>
+                    <option disabled value="">Assigned User (email)</option> 
+                    <option v-for="user in users" :key="user.id" :value="user.email">
+                        {{ user.email }}
+                    </option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Add Task</button>
         </form>
@@ -43,10 +49,10 @@ export default {
         };
     },
     computed: {
-        ...mapState(['tasks'])
+        ...mapState(['tasks','users'])
     },
     methods: {
-        ...mapActions(['fetchTasks', 'addTask', 'updateTask', 'deleteTask']),
+        ...mapActions(['fetchTasks', 'fetchUsers', 'addTask', 'updateTask', 'deleteTask']),
         addTask() {
             if (!this.newTask.title || !this.newTask.description || !this.newTask.user) {
                 alert('Both title and description are required');
@@ -83,6 +89,7 @@ export default {
     },
     created() {
         this.fetchTasks();
+        this.fetchUsers();
     }
 };
 </script>

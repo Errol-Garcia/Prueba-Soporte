@@ -4,6 +4,7 @@
 - se ajustaron las respuestas de los endpoints 
 - Se corrigio una ruta hacia el modelo que no se encontraba
 - se creo una nueva ruta que obtiene las tasks que hay 
+- se creo obtener los users
 
 # Frontend
 
@@ -13,3 +14,4 @@
 - se implemento una funcionalidad de que cuando este completa la tarea el boton se deshabilite y nomas se pueda eliminar
 - se corrigio el metodo para addTask porque estaba cargando una vacia y salia error
 - Se ajusto el actualizar y eliminar
+- se implemento un select con las opciones que hay de usuarios asignados 

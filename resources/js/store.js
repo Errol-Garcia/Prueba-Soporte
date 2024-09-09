@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        tasks: [] // Estado inicial para las tareas
+        tasks: [], // Estado inicial para las tareas
+        users: [] // Añadido para usuarios
     },
     mutations: {
         SET_TASKS(state, tasks){
@@ -23,6 +24,9 @@ export default new Vuex.Store({
         },
         DELETE_TASK(state, taskId) {
             state.tasks = state.tasks.filter(t => t.id !== taskId);
+        },
+        SET_USERS(state, users) { // Mutación para usuarios
+            state.users = users;
         }
     },
     actions: {
@@ -62,9 +66,19 @@ export default new Vuex.Store({
                 .catch(error => {
                     console.error("Error deleting task:", error);
                 });
+        },
+        fetchUsers({ commit }) { // Acción para usuarios
+            return axios.get('/users') // Asegúrate de que esta URL sea correcta
+                .then(response => {
+                    commit('SET_USERS', response.data);
+                })
+                .catch(error => {
+                    console.error("Error fetching users:", error);
+            });
         }
     },
     getters: {
-        tasks: state => state.tasks
+        tasks: state => state.tasks,
+        users: state => state.users // Getter para usuarios
     }
 });

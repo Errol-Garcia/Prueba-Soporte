@@ -1817,8 +1817,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
     };
   },
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)(['tasks'])),
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)(['fetchTasks', 'addTask', 'updateTask', 'deleteTask'])), {}, {
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)(['tasks', 'users'])),
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)(['fetchTasks', 'fetchUsers', 'addTask', 'updateTask', 'deleteTask'])), {}, {
     addTask: function addTask() {
       var _this = this;
       if (!this.newTask.title || !this.newTask.description || !this.newTask.user) {
@@ -1853,6 +1853,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   }),
   created: function created() {
     this.fetchTasks();
+    this.fetchUsers();
   }
 });
 
@@ -1960,7 +1961,7 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
-  }, [_c("input", {
+  }, [_c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -1969,19 +1970,32 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      placeholder: "Assigned User (email)",
       required: ""
     },
-    domProps: {
-      value: _vm.newTask.user
-    },
     on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.newTask, "user", $event.target.value);
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.newTask, "user", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
-  })]), _vm._v(" "), _c("button", {
+  }, [_c("option", {
+    attrs: {
+      disabled: "",
+      value: ""
+    }
+  }, [_vm._v("Assigned User (email)")]), _vm._v(" "), _vm._l(_vm.users, function (user) {
+    return _c("option", {
+      key: user.id,
+      domProps: {
+        value: user.email
+      }
+    }, [_vm._v("\n                    " + _vm._s(user.email) + "\n                ")]);
+  })], 2)]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary btn-block",
     attrs: {
       type: "submit"
@@ -2050,15 +2064,15 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
   state: {
-    tasks: [] // Estado inicial para las tareas
+    tasks: [],
+    // Estado inicial para las tareas
+    users: [] // Añadido para usuarios
   },
   mutations: {
     SET_TASKS: function SET_TASKS(state, tasks) {
       state.tasks = tasks;
     },
-    ADD_TASK: function ADD_TASK(state, task) {
-      // state.tasks.push(task);
-    },
+    ADD_TASK: function ADD_TASK(state, task) {},
     UPDATE_TASK: function UPDATE_TASK(state, updatedTask) {
       var index = state.tasks.findIndex(function (t) {
         return t.id === updatedTask.id;
@@ -2071,6 +2085,10 @@ vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2_
       state.tasks = state.tasks.filter(function (t) {
         return t.id !== taskId;
       });
+    },
+    SET_USERS: function SET_USERS(state, users) {
+      // Mutación para usuarios
+      state.users = users;
     }
   },
   actions: {
@@ -2078,7 +2096,6 @@ vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2_
       var commit = _ref.commit;
       return axios__WEBPACK_IMPORTED_MODULE_0___default().get('/task').then(function (response) {
         commit('SET_TASKS', response.data);
-        console.log("tienes estos: ", response.data);
       })["catch"](function (error) {
         console.error("Error fetching tasks:", error);
       });
@@ -2107,12 +2124,25 @@ vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2_
       })["catch"](function (error) {
         console.error("Error deleting task:", error);
       });
+    },
+    fetchUsers: function fetchUsers(_ref5) {
+      var commit = _ref5.commit;
+      // Acción para usuarios
+      return axios__WEBPACK_IMPORTED_MODULE_0___default().get('/users') // Asegúrate de que esta URL sea correcta
+      .then(function (response) {
+        commit('SET_USERS', response.data);
+      })["catch"](function (error) {
+        console.error("Error fetching users:", error);
+      });
     }
   },
   getters: {
     tasks: function tasks(state) {
       return state.tasks;
-    }
+    },
+    users: function users(state) {
+      return state.users;
+    } // Getter para usuarios
   }
 }));
 
